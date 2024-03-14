@@ -8,14 +8,14 @@ import os
 load_dotenv()
 url = os.getenv("URL")
 consumer_key = os.getenv("CONSUMER_KEY")
-conumer_secret = os.getenv("CONSUMER_SECRET")
+consumer_secret = os.getenv("CONSUMER_SECRET")
 
 
 # %%
 wcapi = API(
     url=url,
     consumer_key=consumer_key,
-    consumer_secret=consumer_key,
+    consumer_secret=consumer_secret,
     wp_api=True,
     version="wc/v3"
 )
