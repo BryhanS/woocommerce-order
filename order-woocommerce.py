@@ -70,10 +70,11 @@ for items in datos:
     monto = items['total']
     phone = items['billing']['phone']
     sku = items['line_items'][0]['sku']
+    email = items['billing']['email']
 
 
     
-    row.append([id,status,registro,'-', nombre_completo,'-','-','-','-',address,'-',sku,distrito,provincia,departamento,monto,phone[-9:]])
+    row.append([id,status,registro,'-', nombre_completo,'-','-','-','-','-',address,'-',distrito,provincia,departamento,sku,monto,phone[-9:],'-','-','1',email])
 
 # %%
 df = pd.DataFrame(row)
