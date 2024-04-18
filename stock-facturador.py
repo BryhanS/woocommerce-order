@@ -27,7 +27,7 @@ print(response)
 if response.status_code == 200:
     # The response data in JSON format
     data_final = response.json()
-    print('API Data:', data_final)
+    # print('API Data:', data_final)
 else:
     # Print an error message if the request was not successful
     print(f'Error in the request. Status code: {response.status_code}')
@@ -59,6 +59,38 @@ for items in data_final['data']['items']:
 
 # %%
 df = pd.DataFrame(rows, columns=["modelo", "sku", "tienda_online", "tienda_polo","total"])
+df = df.drop(columns='total')
+df = pd.melt(df, id_vars=['modelo','sku'], value_vars=['tienda_online','tienda_polo'],var_name='ubicacion',value_name='inventario')
+# df[df['inventario'] < 0]
+df = df[df['inventario'] != 0]
+
+
+# %%
+
+
+# %%
+# df['Grado'] = df['sku'].str.split("-").str[3]
+# df['Color'] = df['sku'].str.split("-").str[4]
+# df
+
+
+# %%
+
+# def change_grado(x):
+#     grado = {'A+':'1.A+', 'A':'2.A', 'B':'3.B', 'C':'4.C'}
+#     if x in grado:
+#         return grado[x]
+#     else:
+#         return 'No existe grado'
+
+
+# %%
+# df['Grado'] = df['Grado'].apply(change_grado)
+# df
+
+# %%
+# new_df =  pd.pivot_table(df,values='inventario', index=['modelo','Color'],columns=['ubicacion','Grado'], aggfunc='sum').reset_index()
+# new_df
 
 # %%
 fecha_actual = datetime.now()
@@ -67,5 +99,8 @@ csv_name = f'{nombre_fecha}-stock.csv'
 
 # %%
 df.to_csv(csv_name, sep=',', index=False, encoding='utf-8-sig')
+
+# %%
+
 
 
