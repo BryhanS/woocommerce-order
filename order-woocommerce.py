@@ -93,6 +93,7 @@ for items in datos:
     registro = items['date_created'].split('T')[0]
     nombre_completo = items['billing']['first_name'] + " " + items['billing']['last_name']
     address = items['billing']['address_1']
+    reference = items['customer_note'] if len(items['customer_note']) else '-'
     distrito = items['billing']['distrito']
     provincia = items['billing']['provincia'] 
     departamento = items['billing']['departamento']
@@ -104,7 +105,7 @@ for items in datos:
     dni = get_meta_data('_billing_dni',items)
     payment_number = str(get_payment_id(items['payment_method'],items))
     
-    row.append([id,status,registro,dni, nombre_completo,'-','-','-','-','-',address,'-',distrito,provincia,departamento,sku,monto,phone[-9:],'-','-','1',email,'-',payment_method,'Capturado',payment_number])
+    row.append([id,status,registro,dni, nombre_completo,'-','-','-','-','-',address,reference,distrito,provincia,departamento,sku,monto,phone[-9:],'-','-','1',email,'-',payment_method,'Capturado',payment_number])
 
 # %%
 df = pd.DataFrame(row)
