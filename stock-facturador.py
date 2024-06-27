@@ -5,10 +5,17 @@ import requests
 import os
 import math
 import pandas as pd
+import platform
 
 # %%
 load_dotenv()
-os.system("rm *.csv")
+
+os_name = platform.system()
+if os_name == 'Windows':
+    os.system("del *csv")
+else:
+    os.system("rm *.csv")
+    
 api_key = os.getenv("API_KEY_SISTEMA")
 url = os.getenv("URL_SISTEMA")
 
