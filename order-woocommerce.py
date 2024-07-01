@@ -22,7 +22,7 @@ wcapi = API(
 )
 
 # %%
-datos = wcapi.get("orders?per_page=50").json()
+datos = wcapi.get("orders?status=processing&per_page=100").json()
 # print(wcapi.get("orders?per_page=100").json())
 
 
