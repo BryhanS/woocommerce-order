@@ -3,3 +3,7 @@
 venv/
 *.csv
 .DS_Store
+send-stock-email.py
+*.zip
+Documentos/
+
