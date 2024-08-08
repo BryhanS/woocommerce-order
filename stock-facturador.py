@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from datetime import datetime
 import requests
 import os
-import math
 import pandas as pd
 import platform
 
@@ -17,7 +16,7 @@ else:
     os.system("rm *.csv")
     
 api_key = os.getenv("API_KEY_SISTEMA")
-url = os.getenv("URL_SISTEMA")
+url = os.getenv("URL_SISTEMA")+'api/document/search-items'
 
 
 # %%
@@ -41,63 +40,58 @@ else:
     print('Error message:', response.text)
 
 # %% [markdown]
-# json_data = data_final
+def warehouses_stock(array_warehouse):
+    warehouses = [
+        {"warehouse_description": "Almacén Oficina Principal","warehouse_id": 1},
+        {"warehouse_description": "Almacén - Online","warehouse_id": 2},
+        {"warehouse_description": "Almacén - El Polo","warehouse_id": 3},
+        {"warehouse_description": "Almacén - Taller","warehouse_id": 4},
+        {"warehouse_description": "Almacén - Reparacion","warehouse_id": 5},
+        {"warehouse_description": "Almacén - El Polo - Transito","warehouse_id": 6}
+    ]
+
+    stocks = []
+
+    for warehouse in warehouses:
+        found = False
+        for one_warehouse in array_warehouse:
+            if one_warehouse["warehouse_id"] == warehouse["warehouse_id"]:
+                stocks.append(float(one_warehouse["stock"]))
+                found = True 
+                break
+        if not found:
+            stocks.append(float(0))
+    return stocks
+
 
 # %%
 rows = []
 for items in data_final['data']['items']:
-
-
     if items['category'] == 'iPhone':
         ri = items['internal_id']
         split = ri.split("-")
         if len(split) >= 2:
             modelo = f'{split[0]}-{split[1]}-{split[2]}'
+            modelo_grado = f'{split[0]}-{split[1]}-{split[2]}-{split[3]}'
+
         else:
             modelo = 'revisar'
         precio = float(items['sale_unit_price'])
-
         nuevo_precio = precio + 40
-
-        online = float(items['warehouses'][1]['stock'])
-        polo = float(items['warehouses'][2]['stock'])
-        total = online + polo
-        rows.append([modelo,ri,online,polo,total])
+        princial, online, polo, taller, reparacion, transito_polo = warehouses_stock(items['warehouses'])
+        rows.append([modelo,modelo_grado,ri,princial,online,polo, taller, reparacion, transito_polo])
 
 # %%
-df = pd.DataFrame(rows, columns=["modelo", "sku", "tienda_online", "tienda_polo","total"])
-df = df.drop(columns='total')
-df = pd.melt(df, id_vars=['modelo','sku'], value_vars=['tienda_online','tienda_polo'],var_name='ubicacion',value_name='inventario')
-# df[df['inventario'] < 0]
+
+
+
+df = pd.DataFrame(rows, columns=["modelo", "modelo_grado", "sku","almacen_principal", "tienda_online", "tienda_polo","almacen_taller", "almacen_reparacion", "almacen_transito_polo"])
+df.head(20)
+description_warehouse = ["almacen_principal", "tienda_online", "tienda_polo", "almacen_taller", "almacen_reparacion", "almacen_transito_polo"]
+df = pd.melt(df, id_vars=['modelo', 'modelo_grado','sku'], value_vars=description_warehouse,var_name='ubicacion',value_name='inventario')
+df[df['inventario'] < 0]
 df = df[df['inventario'] != 0]
 
-
-# %%
-
-
-# %%
-# df['Grado'] = df['sku'].str.split("-").str[3]
-# df['Color'] = df['sku'].str.split("-").str[4]
-# df
-
-
-# %%
-
-# def change_grado(x):
-#     grado = {'A+':'1.A+', 'A':'2.A', 'B':'3.B', 'C':'4.C'}
-#     if x in grado:
-#         return grado[x]
-#     else:
-#         return 'No existe grado'
-
-
-# %%
-# df['Grado'] = df['Grado'].apply(change_grado)
-# df
-
-# %%
-# new_df =  pd.pivot_table(df,values='inventario', index=['modelo','Color'],columns=['ubicacion','Grado'], aggfunc='sum').reset_index()
-# new_df
 
 # %%
 fecha_actual = datetime.now()
@@ -107,7 +101,6 @@ csv_name = f'{nombre_fecha}-stock.csv'
 # %%
 df.to_csv(csv_name, sep=',', index=False, encoding='utf-8-sig')
 
-# %%
 
 
 
