@@ -7,14 +7,14 @@ import math
 import pandas as pd
 
 # %%
-load_dotenv()
+load_dotenv(verbose=True,override=True)
 os.system("rm *.csv")
 
 # %%
 # Usar las variables de entorno
 api_key = os.getenv("API_KEY_SISTEMA")
-url = os.getenv("URL_SISTEMA")
-
+url = os.getenv("URL_SISTEMA")+'api/document/search-items'
+print(url)
 # %%
 
 # Headers with the API token
@@ -22,15 +22,18 @@ headers = {
     'Authorization': f'Bearer {api_key}',
     'Content-Type': 'application/json',  # Adjust the content type as needed
 }
-
+# %%
 # Make a GET request with headers
 response = requests.get(url, headers=headers)
-
+print(response)
 # Check if the request was successful (status code 200)
 if response.status_code == 200:
-    # The response data in JSON format
-    data_final = response.json()
-    print('API Data:', data_final)
+
+    try:
+        data_final = response.json()
+    except requests.exceptions.JSONDecodeError:
+        print("Error: La respuesta no contiene un JSON válido.")
+        print("Contenido de la respuesta:", response.text)
 else:
     # Print an error message if the request was not successful
     print(f'Error in the request. Status code: {response.status_code}')
