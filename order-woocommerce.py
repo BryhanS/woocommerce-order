@@ -60,6 +60,8 @@ def document_type(document):
     else:
         return 'BOLETA'
 
+def codigo_interno(data):
+    return "\n".join([item['sku'] for item in data])
 
 # %%
 row = []
@@ -89,7 +91,7 @@ for items in datos:
     departamento = items['billing']['departamento']
     monto = items['total']
     phone = items['billing']['phone'].replace(" ","")
-    sku = items['line_items'][0]['sku']
+    sku = codigo_interno(items['line_items'])
     email = items['billing']['email']
     payment_method = payment_name(items['payment_method'])
     dni = str(get_meta_data('_billing_dni',items))
