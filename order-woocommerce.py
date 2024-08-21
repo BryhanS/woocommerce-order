@@ -41,8 +41,9 @@ class OrderRow:
     tipo_documento: str
     numero_comprobante: str
     guia_remision: str
-    direccion: str
-    direccion_referencia: str
+    direccion_facturacion: str
+    direccion_envio: str
+    direccion_envio_referencia: str
     distrito: str
     provincia: str
     departamento: str
@@ -127,8 +128,9 @@ class OrderRow:
                 ruc = ruc,
                 razon_social = razon_social,
                 tipo_documento =  tipo_documento,
-                direccion = item['billing']['address_1'].upper(),
-                direccion_referencia = item['customer_note'] if len(item['customer_note']) else '-',
+                direccion_facturacion = item['billing']['address_1'].upper(),
+                direccion_envio = item['shipping']['address_1'].upper(),
+                direccion_envio_referencia = item['customer_note'] if len(item['customer_note']) else '-',
                 distrito = item['billing']['distrito'],
                 provincia = item['billing']['provincia'],
                 departamento = item['billing']['departamento'],
