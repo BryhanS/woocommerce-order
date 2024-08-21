@@ -6,4 +6,4 @@ venv/
 send-stock-email.py
 *.zip
 Documentos/
-
+*.ipynb
