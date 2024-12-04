@@ -44,10 +44,11 @@ def warehouses_stock(array_warehouse):
     warehouses = [
         {"warehouse_description": "Almacén Oficina Principal","warehouse_id": 1},
         {"warehouse_description": "Almacén - Online","warehouse_id": 2},
-        {"warehouse_description": "Almacén - El Polo","warehouse_id": 3},
+        {"warehouse_description": "Almacén - Caminos del Inca","warehouse_id": 3},
         {"warehouse_description": "Almacén - Taller","warehouse_id": 4},
         {"warehouse_description": "Almacén - Reparacion","warehouse_id": 5},
-        {"warehouse_description": "Almacén - El Polo - Transito","warehouse_id": 6}
+        {"warehouse_description": "Almacén - Caminos del Inca - Transito","warehouse_id": 6},
+        {"warehouse_description": "Almacén - Reparacion  - Piezas","warehouse_id": 7}
     ]
 
     stocks = []
@@ -78,16 +79,16 @@ for items in data_final['data']['items']:
             modelo = 'revisar'
         precio = float(items['sale_unit_price'])
         nuevo_precio = precio + 40
-        princial, online, polo, taller, reparacion, transito_polo = warehouses_stock(items['warehouses'])
-        rows.append([modelo,modelo_grado,ri,princial,online,polo, taller, reparacion, transito_polo])
+        princial, online, polo, taller, reparacion, transito_polo, taller_piezas = warehouses_stock(items['warehouses'])
+        rows.append([modelo,modelo_grado,ri,princial,online,polo, taller, reparacion, transito_polo,taller_piezas])
 
 # %%
 
 
 
-df = pd.DataFrame(rows, columns=["modelo", "modelo_grado", "sku","almacen_principal", "tienda_online", "tienda_polo","almacen_taller", "almacen_reparacion", "almacen_transito_polo"])
+df = pd.DataFrame(rows, columns=["modelo", "modelo_grado", "sku","almacen_principal", "tienda_online", "tienda_caminos","almacen_taller", "almacen_reparacion", "almacen_transito_caminos","almacen_taller_piezas"])
 df.head(20)
-description_warehouse = ["almacen_principal", "tienda_online", "tienda_polo", "almacen_taller", "almacen_reparacion", "almacen_transito_polo"]
+description_warehouse = ["almacen_principal", "tienda_online", "tienda_caminos", "almacen_taller", "almacen_reparacion", "almacen_transito_caminos", "almacen_taller_piezas"]
 df = pd.melt(df, id_vars=['modelo', 'modelo_grado','sku'], value_vars=description_warehouse,var_name='ubicacion',value_name='inventario')
 df[df['inventario'] < 0]
 df = df[df['inventario'] != 0]
