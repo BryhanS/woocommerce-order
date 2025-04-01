@@ -48,7 +48,8 @@ class OrderRow:
     provincia: str
     departamento: str
     ri_producto: str
-    monto_total: int
+    monto_sin_comision: float
+    monto_total: float
     telefono_mobil: str
     filler1: str
     filler2: str
@@ -110,6 +111,15 @@ class OrderRow:
         return "\n".join([item['sku'] for item in data])
 
     @staticmethod
+    def feet(data):  
+        feet = 0.0
+        if len(data['fee_lines']) != 0:
+            for item in data['fee_lines']:
+                feet += float(item['total'])
+        return feet
+        
+
+    @staticmethod
     def from_item(item):
         nombre_completo = (item['billing']['first_name'] + " " + item['billing']['last_name']).upper()
         tipo_documento = OrderRow.document_type(OrderRow.get_meta_data("_billing_check_factura",item))
@@ -119,6 +129,11 @@ class OrderRow:
         ri_producto = OrderRow.codigo_interno(item['line_items'])
         payment_method = OrderRow.payment_name(item['payment_method'])
         payment_number = str(OrderRow.get_payment_id(item['payment_method'],item))
+        comision = OrderRow.feet(item)
+        monto_total = float(item['total'])
+        monto_sin_comision = monto_total - comision
+        
+        # print(type(item['total']))
         return OrderRow(
                 id = item['id'],
                 status = item['status'],
@@ -135,6 +150,7 @@ class OrderRow:
                 provincia = item['billing']['provincia'],
                 departamento = item['billing']['departamento'],
                 ri_producto = ri_producto,
+                monto_sin_comision = monto_sin_comision,
                 monto_total = item['total'],
                 telefono_mobil = item['billing']['phone'].replace(" ",""),
                 mail = item['billing']['email'],
