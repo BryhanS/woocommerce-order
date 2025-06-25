@@ -48,9 +48,7 @@ def warehouses_stock(array_warehouse):
         {"warehouse_description": "Almacén - Taller","warehouse_id": 4},
         {"warehouse_description": "Almacén - Reparacion","warehouse_id": 5},
         {"warehouse_description": "Almacén - Caminos del Inca - Transito","warehouse_id": 6},
-        {"warehouse_description": "Almacén - Reparacion  - Piezas","warehouse_id": 7},
-        {"warehouse_description": "Almacén - Logistica Inversa","warehouse_id": 8},
-        {"warehouse_description": "Almacén - Miraflores","warehouse_id": 9}
+        {"warehouse_description": "Almacén - Reparacion  - Piezas","warehouse_id": 7}
     ]
 
     stocks = []
@@ -70,30 +68,22 @@ def warehouses_stock(array_warehouse):
 # %%
 rows = []
 for items in data_final['data']['items']:
-    if items['category'] == 'iPhone':
-        ri = items['internal_id']
-        split = ri.split("-")
-        if len(split) >= 2:
-            modelo = f'{split[0]}-{split[1]}-{split[2]}'
-            modelo_grado = f'{split[0]}-{split[1]}-{split[2]}-{split[3]}'
-
-        else:
-            modelo = 'revisar'
-        precio = float(items['sale_unit_price'])
-        nuevo_precio = precio + 40
-        princial, online, polo, taller, reparacion, transito_polo, taller_piezas, logistica_inversa, miraflores = warehouses_stock(items['warehouses'])
-        rows.append([modelo,modelo_grado,ri,princial,online,polo, taller, reparacion, transito_polo,taller_piezas, logistica_inversa, miraflores])
+    # if items['category'] == 'iPhone':
+    ri = items['internal_id']
+    precio = float(items['sale_unit_price'])
+    nuevo_precio = precio + 40
+    princial, online, polo, taller, reparacion, transito_polo, taller_piezas = warehouses_stock(items['warehouses'])
+    rows.append([ri,princial,online,polo, taller, reparacion, transito_polo,taller_piezas])
 
 # %%
 
 
 
-df = pd.DataFrame(rows, columns=["modelo", "modelo_grado", "sku","almacen_principal", "tienda_online", "tienda_caminos","almacen_taller", "almacen_reparacion", "almacen_transito_caminos","almacen_taller_piezas", "almacen_inversa", "Tienda_Miraflores"])
+df = pd.DataFrame(rows, columns=["sku","almacen_principal", "tienda_online", "tienda_caminos","almacen_taller", "almacen_reparacion", "almacen_transito_caminos","almacen_taller_piezas"])
 df.head(20)
-description_warehouse = ["almacen_principal", "tienda_online", "tienda_caminos", "almacen_taller", "almacen_reparacion", "almacen_transito_caminos", "almacen_taller_piezas", "almacen_inversa", "Tienda_Miraflores"]
-df = pd.melt(df, id_vars=['modelo', 'modelo_grado','sku'], value_vars=description_warehouse,var_name='ubicacion',value_name='inventario')
-df[df['inventario'] < 0]
-df = df[df['inventario'] != 0]
+# description_warehouse = ["almacen_principal", "tienda_online", "tienda_caminos", "almacen_taller", "almacen_reparacion", "almacen_transito_caminos", "almacen_taller_piezas"]
+# df = pd.melt(df, id_vars=['modelo', 'modelo_grado','sku'], value_vars=description_warehouse,var_name='ubicacion',value_name='inventario')
+df.to_csv('stock-facturador-accsorios.csv', sep=',', index=False, encoding='utf-8-sig')
 
 
 # %%
