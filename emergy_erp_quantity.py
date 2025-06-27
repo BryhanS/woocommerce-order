@@ -44,7 +44,9 @@ class ProductERP:
             {"warehouse_description": "Almacén - Taller","warehouse_id": 4},
             {"warehouse_description": "Almacén - Reparacion","warehouse_id": 5},
             {"warehouse_description": "Almacén - Caminos del Inca - Transito","warehouse_id": 6},
-            {"warehouse_description": "Almacén - Reparacion  - Piezas","warehouse_id": 7}
+            {"warehouse_description": "Almacén - Reparacion  - Piezas","warehouse_id": 7},
+            {"warehouse_description": "Almacén - Logistica Inversa","warehouse_id": 8},
+            {"warehouse_description": "Almacén - Miraflores","warehouse_id": 9}
         ]
 
         stocks = []
@@ -67,8 +69,8 @@ class ProductERP:
         modelo = f"{ri.split('-')[0]}-{ri.split('-')[1]}-"
         # online = float(item['warehouses'][1]['stock'])
         # polo = float(item['warehouses'][2]['stock'])
-        princial, online, polo, taller, reparacion, transito_polo, taller_piezas = ProductERP.warehouses_stock(item['warehouses'])
-        total = online + polo
+        princial, online, polo, taller, reparacion, transito_polo, taller_piezas, logistica_inversa, miraflores = ProductERP.warehouses_stock(item['warehouses'])
+        total = online + polo + miraflores
         precio = float(item['sale_unit_price']) + 40
         description = 'in_stock' if polo > 0 else 'out_of_stock'
         return ProductERP(
@@ -197,8 +199,9 @@ for item in data_arry:
             'price': float_numeric(item['precio_new']),
             'regular_price': float_numeric(item['comparativo']),
             'sale_price': float_numeric(item['precio_new']),
-            'description': item['description'],
-            "stock_quantity": item['online']
+            'description': " ",
+            "stock_quantity": int(item['online']),
+            "stock_status": 'instock' if item['online'] > 0 else 'outofstock'
 
         })
     else:
@@ -210,8 +213,9 @@ for item in data_arry:
                 'price': float_numeric(item['precio_new']),
                 'regular_price': float_numeric(item['comparativo']),
                 'sale_price': float_numeric(item['precio_new']),
-                'description': item['description'],
-                "stock_quantity": item['online']
+                'description': " ",
+                "stock_quantity": int(item['online']),
+                "stock_status": 'instock' if item['online'] > 0 else 'outofstock'
             }]
         })
 
@@ -238,14 +242,18 @@ wcapi = API(
     timeout=120
 )
 
+response_data = []
 
 for item in object_data:
     data = {"update": item['update']}
     response = wcapi.post(f"products/{item['id_father']}/variations/batch", data).json()
     if response:
         print(f"{datetime.now()}-{item['id_father']} codigo actualizado")
+        response_data.append(response)
 
 
 # %%
 df_complete.to_csv('pruba_woocommer.csv',index=False,encoding='utf-8')
 
+with open('response.json', 'w', encoding='utf-8') as f:
+    json.dump(response_data, f, ensure_ascii=False, indent=4)
