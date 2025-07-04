@@ -122,6 +122,11 @@ class OrderRow:
     @staticmethod
     def from_item(item):
         nombre_completo = (item['billing']['first_name'] + " " + item['billing']['last_name']).upper()
+        nombre_completo_shipping = (item['shipping']['first_name'] + " " + item['shipping']['last_name']).upper()
+
+        usuario_enviar = nombre_completo_shipping if nombre_completo == nombre_completo_shipping else " "
+
+ 
         tipo_documento = OrderRow.document_type(OrderRow.get_meta_data("_billing_check_factura",item))
         ruc = OrderRow.get_meta_data("_billing_ruc",item) if tipo_documento != 'BOLETA' else '-'
         razon_social = (item['billing']['company']).upper() if tipo_documento != 'BOLETA' else '-'
@@ -145,7 +150,7 @@ class OrderRow:
                 tipo_documento =  tipo_documento,
                 direccion_facturacion = item['billing']['address_1'].upper(),
                 direccion_envio = item['shipping']['address_1'].upper(),
-                direccion_envio_referencia = item['customer_note'] if len(item['customer_note']) else '-',
+                direccion_envio_referencia = item['customer_note'] + "-" + usuario_enviar if len(item['customer_note']) else '-',
                 distrito = item['billing']['distrito'],
                 provincia = item['billing']['provincia'],
                 departamento = item['billing']['departamento'],
