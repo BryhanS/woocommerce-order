@@ -124,7 +124,7 @@ class OrderRow:
         nombre_completo = (item['billing']['first_name'] + " " + item['billing']['last_name']).upper()
         nombre_completo_shipping = (item['shipping']['first_name'] + " " + item['shipping']['last_name']).upper()
 
-        usuario_enviar = nombre_completo_shipping if nombre_completo == nombre_completo_shipping else " "
+        usuario_enviar = " " if nombre_completo == nombre_completo_shipping else nombre_completo_shipping
 
  
         tipo_documento = OrderRow.document_type(OrderRow.get_meta_data("_billing_check_factura",item))
