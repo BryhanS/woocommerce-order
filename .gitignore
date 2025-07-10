@@ -1,9 +1,5 @@
-.env
-
-venv/
-*.csv
 .DS_Store
-send-stock-email.py
-*.zip
-Documentos/
-*.ipynb
+.env
+/data-sku
+/data
+/venv

@@ -177,6 +177,13 @@ df_complete
 data_arry = df_complete.to_dict(orient='records')
 
 
+# comentar depuest
+# data_arry
+# modelo_buscado = 'iPhone-13-'
+# filtrados = [item for item in data_arry if item.get('modelo') == 'IP-15P-' or item.get('modelo') == 'IP-15PM-']
+# data_arry = filtrados
+
+
 # %%
 
 object_data = []

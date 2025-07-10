@@ -89,7 +89,7 @@ df.to_csv('stock-facturador-accsorios.csv', sep=',', index=False, encoding='utf-
 # %%
 fecha_actual = datetime.now()
 nombre_fecha = fecha_actual.strftime("%d%m%y")
-csv_name = f'{nombre_fecha}-stock.csv'
+csv_name = f'{nombre_fecha}-stock-accesorios.csv'
 
 # %%
 df.to_csv(csv_name, sep=',', index=False, encoding='utf-8-sig')
