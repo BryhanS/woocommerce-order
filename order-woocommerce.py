@@ -8,7 +8,7 @@ from dataclasses import dataclass, asdict
 from typing import Optional
 
 # %%
-load_dotenv()
+load_dotenv(verbose=True,override=True)
 url = os.getenv("URL")
 consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
@@ -121,6 +121,7 @@ class OrderRow:
 
     @staticmethod
     def from_item(item):
+        print(item['billing']['first_name'])
         nombre_completo = (item['billing']['first_name'] + " " + item['billing']['last_name']).upper()
         nombre_completo_shipping = (item['shipping']['first_name'] + " " + item['shipping']['last_name']).upper()
 
@@ -206,3 +207,5 @@ else:
 
 
 
+
+# %%

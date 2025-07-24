@@ -117,7 +117,6 @@ async def main():
 # %%
 
 response = asyncio.run(main())
-
 # %%
 data = genarate_rows_as_dicts(response)
 

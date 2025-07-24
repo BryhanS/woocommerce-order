@@ -7,7 +7,7 @@ import platform
 import duckdb
 
 # %%
-load_dotenv()
+load_dotenv(verbose=True,override=True)
 
 os_name = platform.system()
 if os_name == 'Windows':
@@ -114,7 +114,6 @@ df_html = duckdb.query("""
     LEFT JOIN woocommerce ON woocommerce.SKU = df_filter.sku
     ORDER BY df_filter.precio ASC , woocommerce.Nombre ASC
 """).to_df()
-df_html
 # %%
 
 with open('descuentos.html', 'w') as file:

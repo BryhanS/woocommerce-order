@@ -7,7 +7,7 @@ import pandas as pd
 import platform
 
 # %%
-load_dotenv()
+load_dotenv(verbose=True,override=True)
 
 os_name = platform.system()
 if os_name == 'Windows':
